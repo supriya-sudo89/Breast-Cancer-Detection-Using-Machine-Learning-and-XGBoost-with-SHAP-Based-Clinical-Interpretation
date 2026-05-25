@@ -1,0 +1,2 @@
+# Breast-Cancer-Detection-Using-Machine-Learning-and-XGBoost-with-SHAP-Based-Clinical-Interpretation
+Breast cancer is one of the leading causes of death among women worldwide. Early diagnosis significantly improves survival rates and treatment effectiveness. This research proposes an explainable artificial intelligence (XAI)-based breast cancer detection system using machine learning algorithms including Logistic Regression
