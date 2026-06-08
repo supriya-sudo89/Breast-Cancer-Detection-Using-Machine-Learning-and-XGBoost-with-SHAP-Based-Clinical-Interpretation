@@ -60,7 +60,8 @@ y = df["diagnosis"]
 X_train, X_test, y_train, y_test = train_test_split(
     X, y,
     test_size=0.2,
-    random_state=42
+    random_state=42,
+    stratify=y
 )
 
 # ---------------- MODELS ----------------
@@ -81,9 +82,9 @@ for name, model in models.items():
 
     results[name] = {
         "accuracy": accuracy_score(y_test, pred),
-        "precision": precision_score(y_test, pred),
-        "recall": recall_score(y_test, pred),
-        "f1": f1_score(y_test, pred)
+"precision": precision_score(y_test, pred, zero_division=0),
+"recall": recall_score(y_test, pred, zero_division=0),
+"f1": f1_score(y_test, pred, zero_division=0)
     }
 
 # ---------------- RESULTS TABLE ----------------
