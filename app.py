@@ -68,6 +68,7 @@ results = {}
 trained_models = {}
 
 # ---------------- TRAIN ----------------
+# ---------------- TRAIN ----------------
 
 for name, model in models.items():
     model.fit(X_train, y_train)
@@ -75,24 +76,13 @@ for name, model in models.items():
 
     trained_models[name] = model
 
-   results[name] = {
-    "accuracy": accuracy_score(y_test, pred),
-    "precision": precision_score(y_test, pred, average="weighted"),
-    "recall": recall_score(y_test, pred, average="weighted"),
-    "f1": f1_score(y_test, pred, average="weighted"),
-    "pred": pred
-}
-
-results_df = pd.DataFrame({
-    k: {
-        "Accuracy": v["accuracy"],
-        "Precision": v["precision"],
-        "Recall": v["recall"],
-        "F1 Score": v["f1"]
+    results[name] = {
+        "accuracy": accuracy_score(y_test, pred),
+        "precision": precision_score(y_test, pred, average="weighted"),
+        "recall": recall_score(y_test, pred, average="weighted"),
+        "f1": f1_score(y_test, pred, average="weighted"),
+        "pred": pred
     }
-    for k, v in results.items()
-}).T
-
 # ---------------- RESULTS ----------------
 
 st.subheader("📈 Model Comparison")
