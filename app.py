@@ -5,6 +5,16 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pickle
 import io
+import pandas as pd
+import streamlit as st
+
+@st.cache_data
+def load_data():
+    return pd.read_csv("breast-cancer.csv")
+
+df = load_data()
+
+st.dataframe(df.head())
 
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import (
@@ -45,7 +55,10 @@ if uploaded_file is not None:
 
 st.subheader("📊 Dataset Preview")
 st.dataframe(df.head())
+df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
 
+if "id" in df.columns:
+    df = df.drop("id", axis=1)
 X = df.drop("diagnosis", axis=1)
 y = df["diagnosis"]
 
@@ -84,7 +97,15 @@ for name, model in models.items():
         "pred": pred
     }
 # ---------------- RESULTS ----------------
-
+results_df = pd.DataFrame({
+    k: {
+        "Accuracy": v["accuracy"],
+        "Precision": v["precision"],
+        "Recall": v["recall"],
+        "F1 Score": v["f1"]
+    }
+    for k, v in results.items()
+}).T
 st.subheader("📈 Model Comparison")
 st.dataframe(results_df)
 
@@ -101,11 +122,9 @@ st.subheader("🏆 Performance Metrics")
 
 col1, col2, col3, col4 = st.columns(4)
 
-col1.metric("Accuracy", f"{accuracy_score(y_test, predictions)*100:.2f}%")
-col2.metric("Precision", f"{precision_score(y_test, predictions)*100:.2f}%")
-col3.metric("Recall", f"{recall_score(y_test, predictions)*100:.2f}%")
-col4.metric("F1 Score", f"{f1_score(y_test, predictions)*100:.2f}%")
-
+col2.metric("Precision", f"{precision_score(y_test, predictions, average='weighted')*100:.2f}%")
+col3.metric("Recall", f"{recall_score(y_test, predictions, average='weighted')*100:.2f}%")
+col4.metric("F1 Score", f"{f1_score(y_test, predictions, average='weighted')*100:.2f}%")
 # ---------------- CONFUSION MATRIX ----------------
 
 st.subheader("📌 Confusion Matrix")
@@ -167,9 +186,9 @@ for i, col in enumerate(X.columns):
 
 if st.button("🔍 Predict"):
 
-    prediction = best_model.predict([input_data])[0]
-    confidence = np.max(best_model.predict_proba([input_data]))
-
+    input_df = pd.DataFrame([input_data], columns=X.columns)
+prediction = best_model.predict(input_df)[0]
+confidence = np.max(best_model.predict_proba(input_df))
     if prediction == 1:
         st.error("⚠️ Malignant Tumor Detected")
     else:
