@@ -33,14 +33,13 @@ st.title("🩺 Breast Cancer Prediction System (AI Powered)")
 
 # ---------------- LOAD DATA ----------------
 
-@st.cache_data
-def load_data():
-    df = pd.read_csv(r"C:\Users\Acer\Desktop\python training\breastcancerproject\breast-cancer.csv")
-    df = df.dropna()
-    df["diagnosis"] = df["diagnosis"].map({"B": 0, "M": 1})
-    return df
+uploaded_file = st.file_uploader(
+    "Upload Breast Cancer Dataset",
+    type=["csv"]
+)
 
-df = load_data()
+if uploaded_file is not None:
+    df = pd.read_csv(uploaded_file)
 
 # ---------------- DATA ----------------
 
