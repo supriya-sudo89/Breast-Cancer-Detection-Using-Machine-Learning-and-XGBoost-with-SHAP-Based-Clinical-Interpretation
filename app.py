@@ -75,13 +75,13 @@ for name, model in models.items():
 
     trained_models[name] = model
 
-    results[name] = {
-        "accuracy": accuracy_score(y_test, pred),
-        "precision": precision_score(y_test, pred),
-        "recall": recall_score(y_test, pred),
-        "f1": f1_score(y_test, pred),
-        "pred": pred
-    }
+   results[name] = {
+    "accuracy": accuracy_score(y_test, pred),
+    "precision": precision_score(y_test, pred, average="weighted"),
+    "recall": recall_score(y_test, pred, average="weighted"),
+    "f1": f1_score(y_test, pred, average="weighted"),
+    "pred": pred
+}
 
 results_df = pd.DataFrame({
     k: {
