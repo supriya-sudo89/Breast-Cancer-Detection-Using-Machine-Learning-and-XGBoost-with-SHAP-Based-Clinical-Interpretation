@@ -54,7 +54,8 @@ if df["diagnosis"].dtype == "object":
     df["diagnosis"] = df["diagnosis"].map({"M": 1, "B": 0})
 
 X = df.drop("diagnosis", axis=1)
-y = df["diagnosis"]
+df["diagnosis"] = df["diagnosis"].map({"M": 1, "B": 0})
+y = df["diagnosis"].astype(int)
 
 # ---------------- SPLIT ----------------
 X_train, X_test, y_train, y_test = train_test_split(
@@ -82,9 +83,10 @@ for name, model in models.items():
 
     results[name] = {
         "accuracy": accuracy_score(y_test, pred),
-"precision": precision_score(y_test, pred, zero_division=0),
-"recall": recall_score(y_test, pred, zero_division=0),
-"f1": f1_score(y_test, pred, zero_division=0)
+        "precision": precision_score(y_test, pred, average="binary", zero_division=0),
+        "recall": recall_score(y_test, pred, average="binary", zero_division=0),
+        "f1": f1_score(y_test, pred, average="binary", zero_division=0),
+        "pred": pred
     }
 
 # ---------------- RESULTS TABLE ----------------
